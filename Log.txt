@@ -77,45 +77,36 @@ Useful Links
 
 
 
-##### TESTS #####
+##### TESTS ###########################################################
 This is all using the first csv files for training, validation and inference.
 Epochs (E) = 200 unless specified.
 Batch Size (BS) = 4 unless specified.
 
-- output_00, CGG8, .............[128, 64, 64, 64, 64, 32, 16], ST 9:20, ET 00:11 (+1),.TL 1.7864690691976050, VL 3.3999928074914054
-- output_01, CGG8NSBN,     ST 19:00, ET 10:15(+1), ....................................TL 1.5759501973517627, VL 3.1531237524908944
-- output_02, CGG12, ...................................................................TL 1.6948972091653180, VL 3.2641788173366235
-- output_03, CGG12BN,      ST 10:50, ET 19.15(+1), ....................................TL 1.5045548051663267, VL 3.1070716767697720
-- output_04, CGG15, 100 E, ST 11:00, ET 01:02(+1), ....................................TL 1.7760124316020889, VL 3.3942056024396740
-- output_05, CGG15NSBN,    ST 10:30, ET 23:30, ........................................TL 1.1322007296847650, VL 3.2677156538576693
+- output_00, CGG8, .............[128, 64, 64, 64, 64, 32, 16], ST 9:20, ET 00:11 (+1),  TL 1.7864690691976050, VL 3.3999928074914054
+- output_01, CGG8NSBN,     ST 19:00, ET 10:15(+1), .................................... TL 1.5759501973517627, VL 3.1531237524908944
+- output_02, CGG12, ................................................................... TL 1.6948972091653180, VL 3.2641788173366235
+- output_03, CGG12BN,      ST 10:50, ET 19.15(+1), .................................... TL 1.5045548051663267, VL 3.1070716767697720
+- output_04, CGG15, 100 E, ST 11:00, ET 01:02(+1), .................................... TL 1.7760124316020889, VL 3.3942056024396740
+- output_05, CGG15NSBN,    ST 10:30, ET 23:30, ........................................ TL 1.1322007296847650, VL 3.2677156538576693
 
-- output_UNet_01 ............... [64, 128, 256, 512, 1024]...............TL 0.8330796942824409, VL 2.8687951886976086
-- output_UNet_02 ............... [64, 128, 256, 512, 1024, 1024, 1024]...TL 0.5091864192972377, VL 2.8062365570583860
-- output_UNet_04 ............... [64, 128, 256, 512, 1024, 2048].........TL 0.6378958375275541, VL 2.9634264127628223
+- output_UNet_01, .............. [64, 128, 256, 512, 1024]...............TL 0.8330796942824409, VL 2.8687951886976086
+- output_UNet_02, .............. [64, 128, 256, 512, 1024, 1024, 1024]...TL 0.5091864192972377, VL 2.8062365570583860
+- output_UNet_04, .............. [64, 128, 256, 512, 1024, 2048].........TL 0.6378958375275541, VL 2.9634264127628223
 - output_UNet_05, BS=2 ......... [64, 128, 256, 512, 1024, 2048, 4096]...TL 0.6041997219699851, VL 2.6939100300943530
 - output_UNet_06, .............. [64, 128, 256, 512, 1024], carry,.......TL 0.8556496554356313, VL 2.9340661731926170
-- output_UNetRes_01 ............ [64, 128, 256, 512, 1024],..............TL 0.5897464164936083, VL 2.9630362955299585 test sopped early
-#################
+- output_UNetRes_01,............ [64, 128, 256, 512, 1024],..............TL 0.5897464164936083, VL 2.9630362955299585 test sopped early
+#######################################################################
 
 
-##### TESTS #####
+##### TESTS ###########################################################
 MachineRunBaseLine, predictions completed
 MachineRunBaseLineFastTrack, predictions completed
-MachineRunUnet04, [64, 128, 256, 512, 1024, 2048], predictions completed
+MachineRunUnet04,         [64, 128, 256, 512, 1024, 2048], predictions completed
 MachineRunUnet04FastTrack, train completed
-MachineRunUnet07, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4, TRAINING ON redg37023
-MachineRunUnet07BN, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 4X 1080, BS 4, TRAINING ON redg37022
-MachineRunUnet07Predictions, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], predictions completed
-#################
+MachineRunUnet07,         [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
 
-
-
-
-
-
-
-
-
+MachineRunUnet07Transfer, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4, running on 37023
+########################################################################
 
 
 
@@ -189,5 +180,73 @@ a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c09_5s,a:redhill::3dwoswaz:/
 a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c10,2152,18664,6
 a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c11,2152,18664,6
 a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c12,2152,18664,6
+
+
+
+
+
+
+
+
+
+Input Dataset,Output Dataset,First Group,Last Group,Group Increment
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c01,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c02,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c03,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c04,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c05,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c06,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c07,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c08,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c09,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c10,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c11,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c12,2148,18666,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c01,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c02,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c03,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c04,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c05,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c06,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c07,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c08,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c09,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c10,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c11,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c12,2150,18662,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c01,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c02,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c03,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c04,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c05,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c06,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c07,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c08,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c09,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c10,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c11,2152,18664,6
+a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c12,2152,18664,6
+
+
+
+
+
+Hi, apologise for the spamming!
+
+I have all the results now, with few exception:
+
+
+- sequence 19, complete except for g3c08, cannot process this file completely.
+- sequence 23, complete.
+- sequence 25, complete except for g2c09.
+- sequnece 27, it looks like many groups are missing, output does not cover the all line.
+
+
+
+
+
+
+
+
 
 
