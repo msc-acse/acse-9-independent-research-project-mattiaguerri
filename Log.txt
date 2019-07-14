@@ -36,7 +36,11 @@ source /cgv/geovation/2-db9/rel/python/venv/3.6/ml.003/bin/activate.csh
 setenv PATH /cgv/geovation/2-db9/rel/bin:$PATH
 setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/programming/imikhale/local/cuda/cudnn-9.0-v7.4/lib64/
 
+
+
 cd /flat1/3dwoswaz/guerri/
+
+
 
 source /programming/imikhale/local/bin/venv_db9/bin/activate.csh
 tensorboard --logdir='./output/' --port=6006
@@ -101,36 +105,19 @@ Batch Size (BS) = 4 unless specified.
 ##### TESTS ###########################################################
 MachineRunBaseLine, predictions completed
 MachineRunBaseLineFastTrack, predictions completed
-MachineRunUnet04,         [64, 128, 256, 512, 1024, 2048], predictions completed
+MachineRunUnet04,          [64, 128, 256, 512, 1024, 2048], predictions completed
 MachineRunUnet04FastTrack, train completed
-MachineRunUnet07,         [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
+MachineRunUnet07,          [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
+MachineRunUnet07Transfer,  [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
 
-MachineRunUnet07Transfer, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4, running on 37023
+MachineDev00
+  - Metrics:
+    . 1 unet07 running on 99203
+    . 2 unet07bn
+    . 3 unet07var
+
+MachineRunUnet07FasTraDeg, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4, training on 37024
 ########################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-declaration
-A copy of your passport or proof of ID of all tenants
-Latest tax notice 
-Bank account details (IBAN, BIC)
-Your last three pay slips
 
 
 
@@ -226,20 +213,6 @@ a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c09_5s,a:redhill::3dwoswaz:/
 a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c10,2152,18664,6
 a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c11,2152,18664,6
 a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c12,2152,18664,6
-
-
-
-
-
-Hi, apologise for the spamming!
-
-I have all the results now, with few exception:
-
-
-- sequence 19, complete except for g3c08, cannot process this file completely.
-- sequence 23, complete.
-- sequence 25, complete except for g2c09.
-- sequnece 27, it looks like many groups are missing, output does not cover the all line.
 
 
 
