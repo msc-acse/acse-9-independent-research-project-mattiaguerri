@@ -14,8 +14,6 @@
                                   Added Normalization + Standardization + Batch Normalization.
                                   Adding the U-Net.
 
-- MachineWorkFlow_02_BN --------- Copy of MachineWorkFlow_00. With batch normalization (applied before activation).
-
 - MachineWorkFlow_03 ------------ Start form scratch. Try to join the code from the mini-project with the code from CGG.
 
 - MachineWorkFlowDev00 ---------- Copy of MachineWorkFlow_00
@@ -25,27 +23,6 @@
 - MachineDev00 ------------------ Copy of /programming/aclowes/for_production/seismic2seismic (08-07-2019).
                                
 
-
-
-
-
-
-#######################################################################
-
-source /cgv/geovation/2-db9/rel/python/venv/3.6/ml.003/bin/activate.csh
-setenv PATH /cgv/geovation/2-db9/rel/bin:$PATH
-setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/programming/imikhale/local/cuda/cudnn-9.0-v7.4/lib64/
-
-
-
-cd /flat1/3dwoswaz/guerri/
-
-
-
-source /programming/imikhale/local/bin/venv_db9/bin/activate.csh
-tensorboard --logdir='./output/' --port=6006
-
-#######################################################################
 
 
 
@@ -109,15 +86,43 @@ MachineRunUnet04,          [64, 128, 256, 512, 1024, 2048], predictions complete
 MachineRunUnet04FastTrack, train completed
 MachineRunUnet07,          [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
 MachineRunUnet07Transfer,  [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
+MachineRunUnet07FasTraDeg, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
 
-MachineDev00
+MachineDev01
   - Metrics:
     . 1 unet07 running on 99203
     . 2 unet07bn
     . 3 unet07var
 
-MachineRunUnet07FasTraDeg, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4, training on 37024
+
+
+MachineRunUNet07FasTraDegTra, training on 36024
+MachineDev01, test variation on unet07, training on 36024
+MachineDev02, test weight decay, training on 37022
+MachineRunUNet07Epo300, test restarting the training from model 167, training on redg99203
 ########################################################################
+
+
+#######################################################################
+source /cgv/geovation/2-db9/rel/python/venv/3.6/ml.003/bin/activate.csh
+setenv PATH /cgv/geovation/2-db9/rel/bin:$PATH
+setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/programming/imikhale/local/cuda/cudnn-9.0-v7.4/lib64/
+
+cd /flat1/3dwoswaz/guerri/
+
+#######################################################################
+#######################################################################
+setenv ACORNCLIENT_SHAREDLIB_PATH $GROOT/2/test/acsapi/libacs.so
+setenv SP_G2DAEMON_DEBUGMODE 1
+
+setenv ACORNCLIENT_SHAREDLIB_PATH $GROOT/2-db9/test/acs/libacs.so
+
+#######################################################################
+#######################################################################
+source /programming/imikhale/local/bin/venv_db9/bin/activate.csh
+tensorboard --logdir='./output/' --port=6006
+
+#######################################################################
 
 
 
