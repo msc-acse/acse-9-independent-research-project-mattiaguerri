@@ -1,10 +1,8 @@
 ##### VERSION CONTROL #####
 
 - MachineWorkFlow_00 ------------ Original Code.
-
 - MachineWorkFlow_01 ------------ Copy of MachineWorkFlow_00.
                                   Added Normalization + Standardization + Batch Normalization.
-
 - MachineWorkFlow_02 ------------ Copy of MachineWorkFlow_00. Added various architectures. They are in the file networks.py.
                                   Changed how the architecture is defined. It is here defined in the parameters.ini.
                                   Try to not load the whole data in the GPU, but only the batch.
@@ -13,15 +11,36 @@
                                   the batch is instead split among them.
                                   Added Normalization + Standardization + Batch Normalization.
                                   Adding the U-Net.
-
 - MachineWorkFlow_03 ------------ Start form scratch. Try to join the code from the mini-project with the code from CGG.
-
 - MachineWorkFlowDev00 ---------- Copy of MachineWorkFlow_00
                                   While trying to add U-Net I messed up MachineWorkFlow_02 irrimediabely. 
                                   I re-start from scratch.
-
 - MachineDev00 ------------------ Copy of /programming/aclowes/for_production/seismic2seismic (08-07-2019).
-                               
+- Machine1507Dev00 -------------- Copy of the pipeline from /tpanew/shou/seismic2seismic
+                                  The email about this pipeline was received 15/07/2019.
+                                  Working to add UNet with downsampling on only one direction.
+- MachineRunBaseLine ------------ Baseline model, trained on full preduction data.
+- MachineRunBaseLineFastTrack --- Baseline model, trained on fast track data.
+- MachineRunUNet07 -------------- UNet07 trained on full production data.
+- MachineRunUNet07Epo300 -------- Re-starting the training from model 167 of the folder MachineRunUNet07.
+                                  Metrics are in folder 1.
+                                  Minimum reached for model 59.
+                                  Training stopped after epoch 141 because i was overfitting.
+- MachineRunUNet07Epo300Tra ----- Re-starting training from model 59 of MachineRunUNet07Epo300.
+                                  The training uses the L1 loss function.
+                                  Regularization is set to 1e-3.
+                                  Metrics are in folder 2.
+- MachineRunUNet07FasTraDegTra -- Trained completed.
+                                  Re-training with transfer learning using another loss function.
+                                  Trained on fast track deghosted dataset.
+- MachineDev01 ------------------ Metrics 1 is for unet07. Training finished.
+                                  Metrics 2 is for unet07bn. Training finished.
+                                  Metrics 3 is for unet07var. Traininf finished.
+- MachineDev02 ------------------ Test weight decay. Training finished.
+                                  
+
+
+
 
 
 
@@ -79,30 +98,6 @@ Batch Size (BS) = 4 unless specified.
 #######################################################################
 
 
-##### TESTS ###########################################################
-MachineRunBaseLine, predictions completed
-MachineRunBaseLineFastTrack, predictions completed
-MachineRunUnet04,          [64, 128, 256, 512, 1024, 2048], predictions completed
-MachineRunUnet04FastTrack, train completed
-MachineRunUnet07,          [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
-MachineRunUnet07Transfer,  [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
-MachineRunUnet07FasTraDeg, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
-
-MachineDev01
-  - Metrics:
-    . 1 unet07 running on 99203
-    . 2 unet07bn
-    . 3 unet07var
-
-
-
-MachineRunUNet07FasTraDegTra, training on 36024
-MachineDev01, test variation on unet07, training on 36024
-MachineDev02, test weight decay, training on 37022
-MachineRunUNet07Epo300, test restarting the training from model 167, training on redg99203
-########################################################################
-
-
 #######################################################################
 source /cgv/geovation/2-db9/rel/python/venv/3.6/ml.003/bin/activate.csh
 setenv PATH /cgv/geovation/2-db9/rel/bin:$PATH
@@ -112,112 +107,30 @@ cd /flat1/3dwoswaz/guerri/
 
 #######################################################################
 #######################################################################
-setenv ACORNCLIENT_SHAREDLIB_PATH $GROOT/2/test/acsapi/libacs.so
-setenv SP_G2DAEMON_DEBUGMODE 1
-
-setenv ACORNCLIENT_SHAREDLIB_PATH $GROOT/2-db9/test/acs/libacs.so
-
-#######################################################################
-#######################################################################
 source /programming/imikhale/local/bin/venv_db9/bin/activate.csh
 tensorboard --logdir='./output/' --port=6006
 
 #######################################################################
 
 
+##### TESTS ###########################################################
+MachineRunBaseLine
+MachineRunBaseLineFastTrack
+MachineRunUnet04,          [64, 128, 256, 512, 1024, 2048]
+MachineRunUnet07,          [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
+MachineRunUnet07Transfer,  [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
+MachineRunUnet07FasTraDeg, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
 
 
 
+MachineRunUNet07Epo300Tra, training on redg99203
+Machine1507RunUNet07Hor, training on redg99203
+Machine1507RunUNet07Hor01, training on redg37022
+MachineRunUNet07Deg, training on redg37024
+MachineRunUNet07, I wanna train again, training on redg37024
+MachineRunUNet07BigBat, bartch size = 12, training on redg36024
+########################################################################
 
-
-
-
-
-
-
-Input Dataset,Output Dataset,First Group,Last Group,Group Increment
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c01,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c02,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c03,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c04,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c05,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c06,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c07,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c08,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c09,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c10,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c11,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g1c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g1c12,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c01,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c02,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c03,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c04,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c05,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c06,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c07,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c08,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c09,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c10,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c11,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g2c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g2c12,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c01,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c02,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c03,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c04,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c05,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c06,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c07,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c08,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c09,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c10,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c11,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s019g3c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s019g3c12,2152,18664,6
-
-
-
-
-
-
-
-
-
-Input Dataset,Output Dataset,First Group,Last Group,Group Increment
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c01,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c02,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c03,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c04,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c05,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c06,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c07,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c08,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c09,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c10,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c11,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g1c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g1c12,2148,18666,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c01,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c02,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c03,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c04,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c05,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c06,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c07,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c08,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c09,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c10,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c11,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g2c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g2c12,2150,18662,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c01_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c01,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c02_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c02,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c03_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c03,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c04_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c04,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c05_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c05,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c06_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c06,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c07_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c07,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c08_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c08,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c09_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c09,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c10_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c10,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c11_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c11,2152,18664,6
-a:redhill::3dwoswaz:/test/jk_ml_pipe/input_fp_s027g3c12_5s,a:redhill::3dwoswaz:/test/jk_ml_pipe/unet07_s027g3c12,2152,18664,6
 
 
 
