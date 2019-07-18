@@ -1,5 +1,17 @@
-##### VERSION CONTROL #####
+##### Experiments Log #####
+18/07
+Best model for now is UNet07. I found two issues in it. 1) The last downblock, the sizes are 4,6, they should be 3,5. Testing now what I get if this is fixed.
+Another issue is the activation after the transposed convolution. Still have to understand wheter it is better to do it or not. It looks that the effect is small
+though. 
 
+
+
+
+
+
+
+
+##### Directories Log #################################################
 - MachineWorkFlow_00 ------------ Original Code.
 - MachineWorkFlow_01 ------------ Copy of MachineWorkFlow_00.
                                   Added Normalization + Standardization + Batch Normalization.
@@ -19,6 +31,9 @@
 - Machine1507Dev00 -------------- Copy of the pipeline from /tpanew/shou/seismic2seismic
                                   The email about this pipeline was received 15/07/2019.
                                   Working to add UNet with downsampling on only one direction.
+- MachineRunUnet04 -------------- [64, 128, 256, 512, 1024, 2048]
+- MachineRunUnet07 -------------- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
+- MachineRunUnet07FasTraDeg ----- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
 - MachineRunBaseLine ------------ Baseline model, trained on full preduction data.
 - MachineRunBaseLineFastTrack --- Baseline model, trained on fast track data.
 - MachineRunUNet07 -------------- UNet07 trained on full production data.
@@ -30,6 +45,9 @@
                                   The training uses the L1 loss function.
                                   Regularization is set to 1e-3.
                                   Metrics are in folder 2.
+                                  The metrics show no improvement.
+                                  I restart the training. No regularization. Learing rate 1e-5.
+                                  Metrics are in folder 3.
 - MachineRunUNet07FasTraDegTra -- Trained completed.
                                   Re-training with transfer learning using another loss function.
                                   Trained on fast track deghosted dataset.
@@ -37,7 +55,9 @@
                                   Metrics 2 is for unet07bn. Training finished.
                                   Metrics 3 is for unet07var. Traininf finished.
 - MachineDev02 ------------------ Test weight decay. Training finished.
-                                  
+- MachineRunUNet07BigBat -------- Batch Size = 12. After 200 epochs val still going down.
+                                  Restart training using model 200 from first run.
+#######################################################################
 
 
 
@@ -91,7 +111,7 @@ Batch Size (BS) = 4 unless specified.
 
 - output_UNet_01, .............. [64, 128, 256, 512, 1024]...............TL 0.8330796942824409, VL 2.8687951886976086
 - output_UNet_02, .............. [64, 128, 256, 512, 1024, 1024, 1024]...TL 0.5091864192972377, VL 2.8062365570583860
-- output_UNet_04, .............. [64, 128, 256, 512, 1024, 2048].........TL 0.6378958375275541, VL 2.9634264127628223
+- output_UNet_04, .............. [64, 128, 256, 512, 1024, 2048] ....... TL 0.6378958375275541, VL 2.9634264127628223
 - output_UNet_05, BS=2 ......... [64, 128, 256, 512, 1024, 2048, 4096]...TL 0.6041997219699851, VL 2.6939100300943530
 - output_UNet_06, .............. [64, 128, 256, 512, 1024], carry,.......TL 0.8556496554356313, VL 2.9340661731926170
 - output_UNetRes_01,............ [64, 128, 256, 512, 1024],..............TL 0.5897464164936083, VL 2.9630362955299585 test sopped early
@@ -108,28 +128,36 @@ cd /flat1/3dwoswaz/guerri/
 #######################################################################
 #######################################################################
 source /programming/imikhale/local/bin/venv_db9/bin/activate.csh
+setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/programming/imikhale/local/cuda/cudnn-9.0-v7.4/lib64/
 tensorboard --logdir='./output/' --port=6006
 
 #######################################################################
 
 
-##### TESTS ###########################################################
-MachineRunBaseLine
-MachineRunBaseLineFastTrack
-MachineRunUnet04,          [64, 128, 256, 512, 1024, 2048]
-MachineRunUnet07,          [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
-MachineRunUnet07Transfer,  [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
-MachineRunUnet07FasTraDeg, [64, 96, 144, 216, 324, 486, 729, 1094, 1641], 2X 1080, BS 4
+##### Running Tests ###################################################
 
-
-
-MachineRunUNet07Epo300Tra, training on redg99203
-Machine1507RunUNet07Hor, training on redg99203
-Machine1507RunUNet07Hor01, training on redg37022
-MachineRunUNet07Deg, training on redg37024
-MachineRunUNet07, I wanna train again, training on redg37024
-MachineRunUNet07BigBat, bartch size = 12, training on redg36024
+Machine1507RunUNet07Hor01, training on redg37022 stopped at 130
+MachineRunUNet07Deg, training on redg37024 stopped at 178
+MachineRunUNet07, I wanna train again, training on redg37024 ACTIVE
+MachineRunUNet07BigBat, batch size = 12, training on redg36024 ACTIVE
+MachineRunUNet07Verify, test the correction in the last DownBlock, training on 99203 ACTIVE
+MachineRunUNet04, training UNet08, training on 99203 ACTIVE
+MachineDev01. Training UNet07 with BN. Training on redg99203 stopped
+MachineRunUNet07DegTra. Re-starting training with L1 loss. running on redg37022 ACTIVE
+MachineRunUNet07DegTra01. Re-starting training with L1 loss. lr=1e-5. running on redg37024 ACTIVE
 ########################################################################
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
