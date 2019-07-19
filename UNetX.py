@@ -93,12 +93,17 @@ class UpBlock(nn.Module):
     """
 
     """
-    def __init__(self, inCha, outCha, tranPad, finConv=False, finOutCha=1):
+    def __init__(self, inCha, outCha, tranPad, blockInd, finConv=False, finOutCha=1):
         super(UpBlock, self).__init__()
         
         self.finConv = finConv
         
-        self.traCon = traCon2x2(inCha, outCha, kernel_size=2, stride=2, padding=tranPad, output_padding=(0, 0))
+        if blockInd%2==0:
+            self.traCon = traCon2x2(inCha, outCha, kernel_size = (1, 2), stride = (1, 2), 
+                                    padding=tranPad, output_padding=(0, 0))
+        else:
+            self.traCon = traCon2x2(inCha, outCha, kernel_size = (2, 1), stride = (2, 1), 
+                                    padding=tranPad, output_padding=(0, 0))
         
         self.con0 = con1x1_0(2*outCha, outCha)
         self.con1 = con3x3_1(2*outCha, outCha)
@@ -268,20 +273,26 @@ class UNetX(nn.Module):
         testList1.reverse()
         numUps = len(depths)-2 # number of upsampling blocks
         self.depths.reverse() # reverse the list of the depths
+        blockInd = numDowns-3 # initialise the block index
         for i in range(numUps):
-            if testList0[i]*2==testList0[i+1]:
+            blockInd += 1
+            if blockInd%2==0:
                 pad0 = 0
-            else:
-                pad0 = 1
-            if testList1[i]*2==testList1[i+1]:
+                if testList1[i]*2==testList1[i+1]:
+                    pad1 = 0
+                else:
+                    pad1 = 1
+            if blockInd%2!=0:
+                if testList0[i]*2==testList0[i+1]:
+                    pad0 = 0
+                else:
+                    pad0 = 1
                 pad1 = 0
-            else:
-                pad1 = 1
             if i<(numUps-1):
-                block = UpBlock(depths[i], depths[i+1], (pad0, pad1))
+                block = UpBlock(depths[i], depths[i+1], (pad0, pad1), blockInd)
                 self.up_convs.append(block)
             else:
-                block = UpBlock(depths[i], depths[i+1], (pad0, pad1), finConv=True, finOutCha=finOutCha)
+                block = UpBlock(depths[i], depths[i+1], (pad0, pad1), blockInd, finConv=True, finOutCha=finOutCha)
                 self.up_convs.append(block)
         
         
