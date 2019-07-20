@@ -30,22 +30,18 @@ though.
 
 - MachineDev02 ------------------ Test weight decay. Training finished.
 
-- MachineRunUnet04 -------------- [64, 128, 256, 512, 1024, 2048]
-
-- MachineRunUnet07 -------------- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
-                                  Metrics:
-                                      unet00: run with 2X 1080. BS 4.
-                                      unet01: same model of above test. I wanted to see if that was a lucky strike.
-                                      unet02: run with 2X 1080. BS 4. Trained with train_02.csv.
-
-
-- MachineRunUnet07FasTraDeg ----- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
+- MachineRunBaseLineFastTrack --- Baseline model, trained on fast track data.
 
 - MachineRunBaseLine ------------ Baseline model, trained on full preduction data.
 
-- MachineRunBaseLineFastTrack --- Baseline model, trained on fast track data.
+- MachineRunUnet04 -------------- [64, 128, 256, 512, 1024, 2048].
 
-- MachineRunUNet07 -------------- UNet07 trained on full production data.
+- MachineRunUnet07 -------------- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
+                                  Metrics:
+                                      UNet0700: run with 4X 1080 ti. BS = 8.
+                                      UNet0701: run with 2X 1080 ti. BS = 4.
+                                      UNet0702: run with 2X 1080 ti. BS = 4. Trained with train_02.csv.
+                                      UNet0703: run with 4X 1080 ti. BS = 8. Trained with train_02.csv.
 
 - MachineRunUNet07Epo300 -------- Re-starting the training from model 167 of the folder MachineRunUNet07.
                                   Metrics are in folder 1.
@@ -60,15 +56,18 @@ though.
                                   I restart the training. No regularization. Learing rate 1e-5.
                                   Metrics are in folder 3. Stopped epoch 32.
 
+- MachineRunUnet07FasTraDeg ----- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
+
+- MachineRunUNet07FasTraDegTra -- Trained completed.
+                                  Re-training with transfer learning using another loss function.
+                                  Trained on fast track deghosted dataset.
+
 - MachineRunUNet07Deg ----------- Trained on deghosted dataset.
 
 - MachineRunUNet07DegTra -------- Re-starting training with L1 loss. Stopped at epoch 119.
 
 - MachineRunUNet07DegTra01 ------ Re-starting training with L1 loss. lr=1e-5. Stopped epoch 113.
 
-- MachineRunUNet07FasTraDegTra -- Trained completed.
-                                  Re-training with transfer learning using another loss function.
-                                  Trained on fast track deghosted dataset.
 
 - MachineRunUNet07Verify -------- Test the correction in the last DownBlock. Effect neglectable.
 
@@ -78,6 +77,7 @@ though.
 - Machine1507Dev00 -------------- Copy of the pipeline from /tpanew/shou/seismic2seismic
                                   The email about this pipeline was received 15/07/2019.
                                   Working to add UNet with downsampling on only one direction.
+
 - Machine1507RunUNet07Hor ------- Pooling only horizontally.
                                   Trained with BS=4. UNet07 performs better.
 
@@ -156,10 +156,14 @@ tensorboard --logdir='./output/' --port=6006
 
 
 ##### Running Tests ###################################################
-MachineRunUNet04. Training UNet08, training on 99203 ACTIVE
+
 Machine1507RunUNet07Skip, training on redg37022 ACTIVE
 Machine1507RunUNetX. Training on redg99203. ACTIVE
 Machine1507RunUNet07BN. Training on redg36024. ACTIVE
+MachineRunUNet07. Training on 37024. ACTIVE
+Machine1507RunUNet07Skip01. BS = 8. Training on redg37023. ACTIVE
+MachineRunUNet04. Training UNet08. BS = 8. Training on 99203 ACTIVE
+
 ########################################################################
 
 
