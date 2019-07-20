@@ -19,14 +19,8 @@ though.
 
 - MachineWorkFlow_02 ------------ Copy of MachineWorkFlow_00. Added various architectures. They are in the file networks.py.
                                   Changed how the architecture is defined. It is here defined in the parameters.ini.
-                                  Try to not load the whole data in the GPU, but only the batch.
-                                  Apparently the code was already loading up only the single batch.
-                                  The model is now worked on parallel on multiple GPUs. The model is copied on all of them,
-                                  the batch is instead split among them.
                                   Added Normalization + Standardization + Batch Normalization.
                                   Adding the U-Net.
-
-- MachineWorkFlow_03 ------------ Start form scratch. Try to join the code from the mini-project with the code from CGG.
 
 - MachineWorkFlowDev00 ---------- Copy of MachineWorkFlow_00
                                   While trying to add U-Net I messed up MachineWorkFlow_02 irrimediabely. 
@@ -34,9 +28,7 @@ though.
 
 - MachineDev00 ------------------ Copy of /programming/aclowes/for_production/seismic2seismic (08-07-2019).
 
-- Machine1507Dev00 -------------- Copy of the pipeline from /tpanew/shou/seismic2seismic
-                                  The email about this pipeline was received 15/07/2019.
-                                  Working to add UNet with downsampling on only one direction.
+- MachineDev02 ------------------ Test weight decay. Training finished.
 
 - MachineRunUnet04 -------------- [64, 128, 256, 512, 1024, 2048]
 
@@ -68,33 +60,36 @@ though.
                                   I restart the training. No regularization. Learing rate 1e-5.
                                   Metrics are in folder 3. Stopped epoch 32.
 
+- MachineRunUNet07Deg ----------- Trained on deghosted dataset.
+
+- MachineRunUNet07DegTra -------- Re-starting training with L1 loss. Stopped at epoch 119.
+
+- MachineRunUNet07DegTra01 ------ Re-starting training with L1 loss. lr=1e-5. Stopped epoch 113.
+
 - MachineRunUNet07FasTraDegTra -- Trained completed.
                                   Re-training with transfer learning using another loss function.
                                   Trained on fast track deghosted dataset.
 
-- MachineDev01 ------------------ Metrics 1 is for unet07. Training finished.
-                                  Metrics 2 is for unet07bn. Training finished.
-                                  Metrics 3 is for unet07var. Traininf finished.
-
-- MachineDev02 ------------------ Test weight decay. Training finished.
+- MachineRunUNet07Verify -------- Test the correction in the last DownBlock. Effect neglectable.
 
 - MachineRunUNet07BigBat -------- Batch Size = 12. After 200 epochs val still going down.
                                   Restart training using model 200 from first run.
-#######################################################################
 
-
-
-
-
-
-
-
-
+- Machine1507Dev00 -------------- Copy of the pipeline from /tpanew/shou/seismic2seismic
+                                  The email about this pipeline was received 15/07/2019.
+                                  Working to add UNet with downsampling on only one direction.
+- Machine1507RunUNet07Hor ------- Pooling only horizontally.
+                                  Trained with BS=4. UNet07 performs better.
 
 #######################################################################
-Questions
-- When i do the standardization, do i have to compute the parameters (mean and std) using only the training set? Or using
-  training set + validation set together???
+
+
+
+
+
+
+#######################################################################
+Questions:
 - In the UNet, do i need to activate the result of the transposed convolution?
 - In the UNet with batch normalization, should i batch norm the output of the transpose convolution?
 #######################################################################
@@ -137,7 +132,7 @@ Batch Size (BS) = 4 unless specified.
 - output_UNet_04, .............. [64, 128, 256, 512, 1024, 2048] ....... TL 0.6378958375275541, VL 2.9634264127628223
 - output_UNet_05, BS=2 ......... [64, 128, 256, 512, 1024, 2048, 4096]...TL 0.6041997219699851, VL 2.6939100300943530
 - output_UNet_06, .............. [64, 128, 256, 512, 1024], carry,.......TL 0.8556496554356313, VL 2.9340661731926170
-- output_UNetRes_01,............ [64, 128, 256, 512, 1024],..............TL 0.5897464164936083, VL 2.9630362955299585 test sopped early
+- output_UNetRes_01,............ [64, 128, 256, 512, 1024],..............TL 0.5897464164936083, VL 2.9630362955299585
 #######################################################################
 
 
@@ -157,18 +152,14 @@ tensorboard --logdir='./output/' --port=6006
 #######################################################################
 
 
-##### Running Tests ###################################################
 
-Machine1507RunUNet07Hor01, training on redg37022 stopped at 130
-MachineRunUNet07Deg, training on redg37024 stopped at 178
-MachineRunUNet07BigBat, batch size = 12, training on redg36024 FINISHED
-MachineRunUNet07Verify, test the correction in the last DownBlock, training on 99203 ACTIVE
-MachineRunUNet04, training UNet08, training on 99203 ACTIVE
-MachineDev01. Training UNet07 with BN. stopped
-MachineRunUNet07DegTra. Re-starting training with L1 loss. stopped epoch 119
-MachineRunUNet07DegTra01. Re-starting training with L1 loss. lr=1e-5. stopped epoch 113
+
+
+##### Running Tests ###################################################
+MachineRunUNet04. Training UNet08, training on 99203 ACTIVE
 Machine1507RunUNet07Skip, training on redg37022 ACTIVE
-MachineRunUNet07, test small data, training on redg37022 ACTIVE
+Machine1507RunUNetX. Training on redg99203. ACTIVE
+Machine1507RunUNet07BN. Training on redg36024. ACTIVE
 ########################################################################
 
 
