@@ -1,9 +1,31 @@
-##### Experiments Log #####
-18/07
-Best model for now is UNet07. I found two issues in it. 1) The last downblock, the sizes are 4,6, they should be 3,5. Testing now what I get if this is fixed.
-Another issue is the activation after the transposed convolution. Still have to understand wheter it is better to do it or not. It looks that the effect is small
-though. 
 
+
+To Do:
+
+- Check results obtained training UNet07 with smaller dataset.
+
+- Check the results obtained with UNet08
+
+
+
+
+
+
+#####  Experiments Log  ###############################################
+18/07
+Best model for now is UNet07. I found two issues in it. 
+1) The last downblock, the sizes are 4,6, they should be 3,5. Testing now what I get if this is fixed.
+2) Activation after the transposed convolution. Test whether it is better to do it or not.
+
+20/07
+Tested UNet08. [64, 128, 256, 512, 1024, 2048, 4096]. BS = 8.
+After 58 epochs, val loss = 14.25 (UNet07 val loss = 12.77).
+
+21/07
+UNetX 
+
+UNetX_1 Instead of doing pooling i do two convolutions.
+#######################################################################
 
 
 
@@ -35,6 +57,8 @@ though.
 - MachineRunBaseLine ------------ Baseline model, trained on full preduction data.
 
 - MachineRunUnet04 -------------- [64, 128, 256, 512, 1024, 2048].
+                                  In this folder also UNet08.
+                                  [64, 128, 256, 512, 1024, 2048, 4096]. BS = 8. Trained till epoch 58.
 
 - MachineRunUnet07 -------------- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
                                   Metrics:
@@ -157,12 +181,11 @@ tensorboard --logdir='./output/' --port=6006
 
 ##### Running Tests ###################################################
 
-Machine1507RunUNet07Skip, training on redg37022 ACTIVE
+Machine1507RunUNet07Skip, training on redg37022 stopped at 329 bacuse overfitting
 Machine1507RunUNetX. Training on redg99203. ACTIVE
 Machine1507RunUNet07BN. Training on redg36024. ACTIVE
-MachineRunUNet07. Training on 37024. ACTIVE
 Machine1507RunUNet07Skip01. BS = 8. Training on redg37023. ACTIVE
-MachineRunUNet04. Training UNet08. BS = 8. Training on 99203 ACTIVE
+Machine1507RunUNet_X1. BS = 8. Training on redg37022. ACTIVE
 
 ########################################################################
 
