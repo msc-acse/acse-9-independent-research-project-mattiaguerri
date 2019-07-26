@@ -10,6 +10,10 @@ To Do:
 
 - Check if original unet was using batch norm and momentum.
 
+- Test with bias on in the last conv PRIORITY!!!
+
+- For deg, add couple of layers and trained only those PRIORITY!!!
+
 
 
 
@@ -188,6 +192,7 @@ Machine1507RunUNet07BN01. BS = 12. Killed at 229.
 Machine1507RunUNet07BN01. BS = 12. SGD w/ momentum. Killed at 78.
 Machine1507RunUNet07. BS = 8. Killed at 351.
 Machine1507RunUNet07Cha. Killed at 325.
+Machine1507Dev00. Training UNet09. BS = 4. Training on 37024. ACTIVE.
 Machine1507RunUNet09. Training on 99203. ACTIVE
 ########################################################################
 
