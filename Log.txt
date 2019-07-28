@@ -14,6 +14,10 @@ To Do:
 
 - For deg, add couple of layers and trained only those PRIORITY!!!
 
+can you add 2 conv layer with kernal size (1,101) nchannels=64 and train the unet07 from scratch. I am interested to see if it can improve the low amplitude     replace the finlayer
+
+
+
 
 
 
@@ -32,6 +36,9 @@ After 58 epochs, val loss = 14.25 (UNet07 val loss = 12.77).
 21/07
 UNetX. Always above UNet07. Exploded at 122. 
 UNetX_1 Instead of doing pooling, do convolution. Always above UNet07.
+
+27/07
+Applied L1 to UNet07_04_25, val loss decreased by 3.7%.
 #######################################################################
 
 
@@ -67,10 +74,13 @@ UNetX_1 Instead of doing pooling, do convolution. Always above UNet07.
 
 - MachineRunUnet07 -------------- [64, 96, 144, 216, 324, 486, 729, 1094, 1641]. 2X 1080. BS 4.
                                   Metrics:
-                                      UNet0700: run with 4X 1080 ti. BS = 8.
-                                      UNet0701: run with 2X 1080 ti. BS = 4.
-                                      UNet0702: run with 2X 1080 ti. BS = 4. Trained with train_02.csv.
-                                      UNet0703: run with 4X 1080 ti. BS = 8. Trained with train_02.csv.
+                                      UNet07_00: run with 4X 1080 ti. BS = 8.
+                                      UNet07_01: run with 2X 1080 ti. BS = 4.
+                                      UNet07_02: run with 2X 1080 ti. BS = 4. Trained with train_02.csv.
+                                      UNet07_03: run with 4X 1080 ti. BS = 8. Trained with train_02.csv.
+                                      UNet07_04: run with 4X 1080 ti. BS = 8.
+
+
 
 - MachineRunUNet07Epo300 -------- Re-starting the training from model 167 of the folder MachineRunUNet07.
                                   Metrics are in folder 1.
@@ -192,18 +202,10 @@ Machine1507RunUNet07BN01. BS = 12. Killed at 229.
 Machine1507RunUNet07BN01. BS = 12. SGD w/ momentum. Killed at 78.
 Machine1507RunUNet07. BS = 8. Killed at 351.
 Machine1507RunUNet07Cha. Killed at 325.
-Machine1507Dev00. Training UNet09. BS = 4. Training on 37024. ACTIVE.
-Machine1507RunUNet09. Training on 99203. ACTIVE
+Machine1507Dev00. Training UNet09. BS = 4. Training on 37024. Finished.
+Machine1507RunUNet09. Training on 99203. Finished.
+
 ########################################################################
-
-
-
-
-[2019-07-22 21:07:27] [AcornClient] [E] [Create] [rh12701c1:8180] Connect Failed
-[2019-07-22 21:07:27] [AcornClient] [E] [WriteRange] [rh12701c1:8180] channel is in state TRANSIENT_FAILURE
-ERROR:acsapi:Could not write range for ordinal= 1
-
-
 
 
 
