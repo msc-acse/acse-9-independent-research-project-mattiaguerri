@@ -1,23 +1,25 @@
 
 
-To Do:
 
-- Check results obtained training UNet07 with smaller dataset.
+#####  To Do  #########################################################
 
-- Check the results obtained with UNet08
-
-- Run UNet07, deblending dataset, une only one channel. 
+- Check the results obtained with UNet08.
 
 - Check if original unet was using batch norm and momentum.
 
-- Test with bias on in the last conv PRIORITY!!!
+- Test UNet07 setting the bias on everywhere.
 
-- For deg, add couple of layers and trained only those PRIORITY!!!
+- For deg, add couple of layers and train only those, fix the rest. .............. PRIORITY!
 
-can you add 2 conv layer with kernal size (1,101) nchannels=64 and train the unet07 from scratch. I am interested to see if it can improve the low amplitude     replace the finlayer
+- Train the model on the Shots, 1, 3, 5 shots. Predict shot 5. ....... TOP PRIORITY!
 
+- Demultiple. Run the following tests with UNet07_BiasAll_8ms: ....... TOP PRIORITY!
+    . From deg to dml
+    . From raw input to dml
+    . From denoise to dml
 
-
+- Clean up the jk_ml_pipe folder. .................................... TOP PRIORITY!
+#######################################################################
 
 
 
@@ -173,6 +175,7 @@ Batch Size (BS) = 4 unless specified.
 
 
 #######################################################################
+
 source /cgv/geovation/2-db9/rel/python/venv/3.6/ml.003/bin/activate.csh
 setenv PATH /cgv/geovation/2-db9/rel/bin:$PATH
 setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/programming/imikhale/local/cuda/cudnn-9.0-v7.4/lib64/
@@ -181,6 +184,7 @@ cd /flat1/3dwoswaz/guerri/
 
 #######################################################################
 #######################################################################
+
 source /programming/imikhale/local/bin/venv_db9/bin/activate.csh
 setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/programming/imikhale/local/cuda/cudnn-9.0-v7.4/lib64/
 tensorboard --logdir='./output/' --port=6006
@@ -194,9 +198,9 @@ tensorboard --logdir='./output/' --port=6006
 ##### Running Tests ###################################################
 
 Machine1507RunUNet07Skip. Training on redg37022. killed at 329 bacuse overfitting
-Machine1507RunUNetX. Training on redg99203. killed at 172 because exploding
-Machine1507RunUNet07BN. Training on redg36024. stopped at 331.
-Machine1507RunUNet07Skip01. BS = 8. Training on redg37023. Finished.
+Machine1507RunUNetX. Training on 99203. killed at 172 because exploding
+Machine1507RunUNet07BN. Training on 36024. stopped at 331.
+Machine1507RunUNet07Skip01. BS = 8. Training on 37023. Finished.
 Machine1507RunUNet_X1. BS = 8. accidentally deleted. best val was 10.593 at 278.
 Machine1507RunUNet07BN01. BS = 12. Killed at 229.
 Machine1507RunUNet07BN01. BS = 12. SGD w/ momentum. Killed at 78.
@@ -204,6 +208,15 @@ Machine1507RunUNet07. BS = 8. Killed at 351.
 Machine1507RunUNet07Cha. Killed at 325.
 Machine1507Dev00. Training UNet09. BS = 4. Training on 37024. Finished.
 Machine1507RunUNet09. Training on 99203. Finished.
+Machine1507RunUNet07Bias. Train on 36024. Finished.
+Machine1507RunUNet07Plus. Train on 37022. Finished.
+Machine1507RunUNet10. Train on 99203.
+Machine1507RunUNet07_BiasAll. Train on 37021.
+
+Machine1507RunUNet07_BiasAll. Train on 36024.
+Machine1507RunUNet07_BiasAll_inp2dml. Train on 36024.
+Machine1507RunUNet07_BiasAll_den2dml. Train on 37023.
+Machine1507RunUNet07_BiasAll_den2deg. Train on 99202.
 
 ########################################################################
 
