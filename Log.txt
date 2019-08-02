@@ -9,16 +9,17 @@
 
 - Test UNet07 setting the bias on everywhere.
 
-- For deg, add couple of layers and train only those, fix the rest. .............. PRIORITY!
+- For deg, add couple of layers and train only those, fix the rest. .............. 
 
-- Train the model on the Shots, 1, 3, 5 shots. Predict shot 5. ....... TOP PRIORITY!
+- Clean up the jk_ml_pipe folder. .................................... 
 
-- Demultiple. Run the following tests with UNet07_BiasAll_8ms: ....... TOP PRIORITY!
-    . From deg to dml
-    . From raw input to dml
-    . From denoise to dml
+- Check original UNet implementation. Are they using batch normalization?
+                                      Are they using ReLU after transpose convolution?
+                                      Are they using bias, where?
 
-- Clean up the jk_ml_pipe folder. .................................... TOP PRIORITY!
+PRIORITY:
+ - UNet07_Plus_BiasAll on a large dataset.
+ - A deeper UNet07_Plus_BiasAll on a large dataset.
 #######################################################################
 
 
@@ -41,6 +42,9 @@ UNetX_1 Instead of doing pooling, do convolution. Always above UNet07.
 
 27/07
 Applied L1 to UNet07_04_25, val loss decreased by 3.7%.
+
+31/07
+UNet, in the original paper, no mention about batch normalization.
 #######################################################################
 
 
@@ -118,6 +122,12 @@ Applied L1 to UNet07_04_25, val loss decreased by 3.7%.
 
 - Machine1507RunUNet07Hor ------- Pooling only horizontally.
                                   Trained with BS=4. UNet07 performs better.
+- Machine1507RunUNet11 ---------- [64, 96, 144, 216, 324, 486, 729, 1094]
+- Machine1507RunUNet12 ---------- [64, 96, 144, 216, 324, 486, 729]
+
+- Machine1507RunUNet07_X -------- [32, 48, 72, 108, 162, 243, 364, 546, 819]
+
+
 
 #######################################################################
 
@@ -174,7 +184,9 @@ Batch Size (BS) = 4 unless specified.
 #######################################################################
 
 
+
 #######################################################################
+# Run the pipeline.
 
 source /cgv/geovation/2-db9/rel/python/venv/3.6/ml.003/bin/activate.csh
 setenv PATH /cgv/geovation/2-db9/rel/bin:$PATH
@@ -183,13 +195,29 @@ setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/program
 cd /flat1/3dwoswaz/guerri/
 
 #######################################################################
+
+
+
 #######################################################################
+# TensorBoard
 
 source /programming/imikhale/local/bin/venv_db9/bin/activate.csh
 setenv LD_LIBRARY_PATH /programming/imikhale/local/cuda/cuda-9.0/lib64/:/programming/imikhale/local/cuda/cudnn-9.0-v7.4/lib64/
 tensorboard --logdir='./output/' --port=6006
 
 #######################################################################
+
+
+
+#######################################################################
+# Alex Path.
+
+setenv PATH /cgv/geovation/2-db9/rel/bin:$PATH 
+setenv G2_ELM_USE CommonLibrary/AcornClientServer=1.07
+setenv LD_LIBRARY_PATH /cgv/geovation/2-db9/rel/cuda/9.0/lib64/
+
+#######################################################################
+
 
 
 
@@ -212,13 +240,56 @@ Machine1507RunUNet07Bias. Train on 36024. Finished.
 Machine1507RunUNet07Plus. Train on 37022. Finished.
 Machine1507RunUNet10. Train on 99203.
 Machine1507RunUNet07_BiasAll. Train on 37021.
-
-Machine1507RunUNet07_BiasAll. Train on 36024.
+Machine1507RunUNet07_BiasAll_Sht. Train on 37022.
 Machine1507RunUNet07_BiasAll_inp2dml. Train on 36024.
 Machine1507RunUNet07_BiasAll_den2dml. Train on 37023.
 Machine1507RunUNet07_BiasAll_den2deg. Train on 99202.
+Machine1507RunUNet07_noBias. Train on 37022. Killed at 391.
+UNet07_Bias_3Sht. Train on 36024. killed at 131.
+TestUNet/UNet07_Bias. Train on 99203. Finished.
+Machine1507RunUNet07_Plus Train on 99203
+Machine1507RunUNet09_Plus Train on 99203
+Machine1507RunUNet11 Train on 36024
+Machine1507RunUNet12 Train on 99204
+Machine1507RunUNet07_X Train on 99205
 
 ########################################################################
+
+
+
+setenv SP_ACORNCLIENT_G2LOGLEVEL DEBUG
+setenv SP_G2DAEMON_G2LOGLEVEL DEBUG
+
+setenv G2_ELM_USE "CommonLibrary/AcornClientServer=0.1.2"
+
+setenv G2D_HOSTPORT_OVERRIDE "redprg905:9090"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
