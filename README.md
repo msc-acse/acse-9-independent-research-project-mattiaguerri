@@ -35,3 +35,9 @@ inWidth = 636
 inHeight = 1251
 model = UNetSkip(input_channels, output_channels, blocks, inWidth, inHeight)
 ```
+
+## Fourier Transform Loss
+In the script fft.loss, the class FFTloss implements the loss function discussed in Section 3.3.2 of the Report.
+It requires two inputs:
+signal_ndim: integer, 1 or 2, defines wheather to perform 1d or 2d FFT.
+normalized: bool, default False, whether to normalize or not FFT output.
