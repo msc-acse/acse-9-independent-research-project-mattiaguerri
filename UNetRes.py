@@ -19,8 +19,8 @@ def con3x3_1(inCha, outCha, kernel_size=3, stride=1, padding=1, bias=True):
 
 
 # 2x2 transposed convolution.
-def traCon2x2(inCha, outCha, kernel_size, stride, padding, output_padding):
-    return nn.ConvTranspose2d(inCha, outCha, kernel_size=kernel_size, stride=stride, padding=padding, output_padding=output_padding)
+def traCon2x2(inCha, outCha, kernel_size, stride, padding, output_padding, bias=True):
+    return nn.ConvTranspose2d(inCha, outCha, kernel_size=kernel_size, stride=stride, padding=padding, output_padding=output_padding, bias=bias)
 
 
 # ReLU Activation function.
@@ -31,7 +31,6 @@ def actReLU():
 class DownBlock(nn.Module):
     """
     Block of the downsampling (encoding) path.
-    Residual learning implemented.
 
     Parameters
     ----------
@@ -47,16 +46,14 @@ class DownBlock(nn.Module):
     Methods
     -------
     forward : forward pass into the block
-
     """
     def __init__(self, inCha, outCha, pooling, poolPad):
         super(DownBlock, self).__init__()
 
         self.pooling = pooling
 
-        self.con0 = con1x1_0(inCha, outCha)
-        self.con1 = con3x3_1(inCha, outCha)
-        self.con2 = con3x3_1(outCha, outCha)
+        self.con0 = con3x3_1(inCha, outCha)
+        self.con1 = con3x3_1(outCha, outCha)
 
         self.act = actReLU()
 
@@ -87,24 +84,20 @@ class DownBlock(nn.Module):
         x_0 : torch tensor
             4D tensor output by the block before pooling. Dimensions as above.
         """
-        xAdd = self.con0(x)
-
+        x = self.act(self.con0(x))
         x = self.act(self.con1(x))
-        x = self.act(self.con2(x) + xAdd)
-
-        x_0 = x
+        xOut = x
         if self.pooling:
             x = self.pool(x)
 
         # print("\n DownBlock Output Shape = ", x.shape)
 
-        return x, x_0
+        return x, xOut
 
 
 class UpBlock(nn.Module):
     """
     Block of the upsampling (decoding) path.
-    Residual learning is implemented.
 
     Parameters
     ----------
@@ -124,18 +117,15 @@ class UpBlock(nn.Module):
     def __init__(self, inCha, outCha, tranPad, finConv=False, finOutCha=1):
         super(UpBlock, self).__init__()
 
-        self.finConv = finConv
-
         self.traCon = traCon2x2(inCha, outCha, kernel_size=2, stride=2, padding=tranPad, output_padding=(0, 0))
-
-        self.con0 = con1x1_0(2*outCha, outCha)
-        self.con1 = con3x3_1(2*outCha, outCha)
-        self.con2 = con3x3_1(outCha, outCha)
+        self.con0 = con3x3_1(2*outCha, outCha)
+        self.con1 = con3x3_1(outCha, outCha)
 
         self.act = actReLU()
 
+        self.finConv = finConv
         if self.finConv:
-            self.con3 = nn.Conv2d(outCha, finOutCha, kernel_size=1, stride=1, padding=0, bias=True)
+            self.con2 = con1x1_0(outCha, finOutCha)
 
     def forward(self, xDown, x):
         """
@@ -167,20 +157,19 @@ class UpBlock(nn.Module):
         """
         xUp = self.traCon(x)
         x = torch.cat((xUp, xDown), 1)
-        xAdd = self.con0(x)
 
-        x = self.act(self.con1(x))
-        x = self.act(self.con2(x) + xAdd)
+        x = self.act((self.con0(x)))
+        x = self.act((self.con1(x)))
 
         if self.finConv:
-            x = self.con3(x)
+            x = self.con2(x)
 
         # print("\n     UpBlock Output Shape = ", x.shape)
 
         return x
 
 
-class UNetSkip(nn.Module):
+class UNet(nn.Module):
     """
     U-Net. The network is constituted by a downsampling (encoding) path and an upsampling
     (decoding) path. 
@@ -209,7 +198,7 @@ class UNetSkip(nn.Module):
     forward : forward pass into the network
     """
     def __init__(self, inCha, finOutCha, depths, inWidth, inHeight):
-        super(UNetSkip, self).__init__()
+        super(UNet, self).__init__()
 
         # If input height and/or width are odd, the input has been padded.
         # Correct the input width and heigth.
@@ -234,7 +223,7 @@ class UNetSkip(nn.Module):
         for i in range(numDowns):
             pooling = True if i < numDowns-1 else False
             if (pooling and i < numDowns-2):  # avoid odd numbers using padding.
-                if (inWidth/2) % 2 == 0:
+                if (inWidth / 2) % 2 == 0:
                     pad0 = 0
                     inWidth //= 2
                     testList0.append(inWidth)
@@ -242,22 +231,21 @@ class UNetSkip(nn.Module):
                     pad0 = 1
                     inWidth = inWidth//2+1
                     testList0.append(inWidth)
-                if (inHeight/2) % 2 == 0:
+                if (inHeight / 2) % 2 == 0:
                     pad1 = 0
                     inHeight //= 2
                     testList1.append(inHeight)
                 else:
                     pad1 = 1
-                    inHeight = inHeight//2+1
+                    inHeight = inHeight // 2 + 1
                     testList1.append(inHeight)
-            if (pooling and i == numDowns-2):  # do not avoid odd numbers at the bottom.
+            if (pooling and i == numDowns - 2):  # do not avoid odd numbers at the bottom.
                 pad0 = 0
                 inWidth //= 2
                 testList0.append(inWidth)
                 pad1 = 0
                 inHeight //= 2
                 testList1.append(inHeight)
-
             block = DownBlock(depths[i], depths[i+1], pooling, (pad0, pad1))
             self.down_convs.append(block)
 
@@ -313,6 +301,7 @@ class UNetSkip(nn.Module):
         padIt = False
         pad3 = 0
         pad2 = 0
+
         if x.shape[3] % 2 != 0:
             padIt = True
             pad3 = 1

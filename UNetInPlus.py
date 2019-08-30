@@ -31,7 +31,6 @@ def actReLU():
 class DownBlock(nn.Module):
     """
     Block of the downsampling (encoding) path.
-    Residual learning implemented.
 
     Parameters
     ----------
@@ -47,16 +46,14 @@ class DownBlock(nn.Module):
     Methods
     -------
     forward : forward pass into the block
-
     """
     def __init__(self, inCha, outCha, pooling, poolPad):
         super(DownBlock, self).__init__()
 
         self.pooling = pooling
 
-        self.con0 = con1x1_0(inCha, outCha)
-        self.con1 = con3x3_1(inCha, outCha)
-        self.con2 = con3x3_1(outCha, outCha)
+        self.con0 = con3x3_1(inCha, outCha)
+        self.con1 = con3x3_1(outCha, outCha)
 
         self.act = actReLU()
 
@@ -87,24 +84,20 @@ class DownBlock(nn.Module):
         x_0 : torch tensor
             4D tensor output by the block before pooling. Dimensions as above.
         """
-        xAdd = self.con0(x)
-
+        x = self.act(self.con0(x))
         x = self.act(self.con1(x))
-        x = self.act(self.con2(x) + xAdd)
-
-        x_0 = x
+        xOut = x
         if self.pooling:
             x = self.pool(x)
 
         # print("\n DownBlock Output Shape = ", x.shape)
 
-        return x, x_0
+        return x, xOut
 
 
 class UpBlock(nn.Module):
     """
     Block of the upsampling (decoding) path.
-    Residual learning is implemented.
 
     Parameters
     ----------
@@ -127,15 +120,13 @@ class UpBlock(nn.Module):
         self.finConv = finConv
 
         self.traCon = traCon2x2(inCha, outCha, kernel_size=2, stride=2, padding=tranPad, output_padding=(0, 0))
-
-        self.con0 = con1x1_0(2*outCha, outCha)
-        self.con1 = con3x3_1(2*outCha, outCha)
-        self.con2 = con3x3_1(outCha, outCha)
+        self.con0 = con3x3_1(2*outCha, outCha)
+        self.con1 = con3x3_1(outCha, outCha)
 
         self.act = actReLU()
 
         if self.finConv:
-            self.con3 = nn.Conv2d(outCha, finOutCha, kernel_size=1, stride=1, padding=0, bias=True)
+            self.con2 = nn.Conv2d(outCha, finOutCha, kernel_size=1, stride=1, padding=0, bias=True)
 
     def forward(self, xDown, x):
         """
@@ -167,25 +158,78 @@ class UpBlock(nn.Module):
         """
         xUp = self.traCon(x)
         x = torch.cat((xUp, xDown), 1)
-        xAdd = self.con0(x)
 
-        x = self.act(self.con1(x))
-        x = self.act(self.con2(x) + xAdd)
+        x = self.act((self.con0(x)))
+        x = self.act((self.con1(x)))
 
         if self.finConv:
-            x = self.con3(x)
+            x = self.con2(x)
 
         # print("\n     UpBlock Output Shape = ", x.shape)
 
         return x
 
 
-class UNetSkip(nn.Module):
+class FlatBlock(nn.Module):
     """
-    U-Net. The network is constituted by a downsampling (encoding) path and an upsampling
-    (decoding) path. 
-    Each block performs two convolutions. The last block
-    of the decoder also performs a 1x1 convolution.
+    Block of same padding convolutions.
+    Kernel size is 1x101.
+
+    Parameters
+    ----------
+    inCha : integer
+        Input channels for the convolution.
+    outCha : integer
+        Output channels of the convolution (number of kernels).
+
+    Methods
+    -------
+    forward : forward pass into the block
+    """
+    def __init__(self, inCha, outCha):
+        super(FlatBlock, self).__init__()
+
+        self.con0 = nn.Conv2d(inCha, outCha, kernel_size=(1, 101), stride=(1, 1), padding=(0, 50), bias=True)
+        self.con1 = nn.Conv2d(outCha, outCha, kernel_size=(1, 101), stride=(1, 1), padding=(0, 50), bias=True)
+
+        self.act = actReLU()
+
+    def forward(self, x):
+        """
+        Perform the forward pass through the block.
+
+        Parameters
+        ----------
+        x : torch tensor
+            4D tensor, output of the block.
+              first dimension = batch size
+              second dimension = number of channels
+              third dimension = number of columns
+              fourth dimension = number of rows
+
+        Returns
+        -------
+        x : torch tensor
+            4D tensor output by the block.
+              first dimension = batch size
+              second dimension = number of channels
+              third dimension = number of columns
+              fourth dimension = number of rows
+        """
+        x = self.act((self.con0(x)))
+        x = self.act((self.con1(x)))
+
+        # print("\n         FlatBlock Output Shape = ", x.shape)
+
+        return x
+
+
+class UNetInPlus(nn.Module):
+    """
+    The network is constituted by a downsampling (encoding) path and an upsampling (decoding) path.
+    Each block performs two convolutions.
+    The last block of the decoder also performs a 1x1 convolution.
+    An additional block of large kernel size convolutions in intraduced in front of the encoder.
 
     Parameters
     ----------
@@ -209,7 +253,7 @@ class UNetSkip(nn.Module):
     forward : forward pass into the network
     """
     def __init__(self, inCha, finOutCha, depths, inWidth, inHeight):
-        super(UNetSkip, self).__init__()
+        super(UNetInPlus, self).__init__()
 
         # If input height and/or width are odd, the input has been padded.
         # Correct the input width and heigth.
@@ -219,13 +263,14 @@ class UNetSkip(nn.Module):
             inHeight += 1
 
         # Adapt the list depths.
-        depths.insert(0, inCha)
+        depths.insert(0, 64)
         self.depths = depths
 
-        self.down_convs = []
-        self.up_convs = []
+        # Add the flat block.
+        self.flat_convs = FlatBlock(3, 64)
 
         # Build the encoder.
+        self.down_convs = []
         testList0 = [inWidth]
         testList1 = [inHeight]
         numDowns = len(depths)-1  # number of downsampling blocks
@@ -233,14 +278,14 @@ class UNetSkip(nn.Module):
         pad1 = 0
         for i in range(numDowns):
             pooling = True if i < numDowns-1 else False
-            if (pooling and i < numDowns-2):  # avoid odd numbers using padding.
+            if (pooling and i < numDowns - 2):  # avoid odd numbers using padding.
                 if (inWidth/2) % 2 == 0:
                     pad0 = 0
                     inWidth //= 2
                     testList0.append(inWidth)
                 else:
                     pad0 = 1
-                    inWidth = inWidth//2+1
+                    inWidth = inWidth // 2 + 1
                     testList0.append(inWidth)
                 if (inHeight/2) % 2 == 0:
                     pad1 = 0
@@ -257,11 +302,11 @@ class UNetSkip(nn.Module):
                 pad1 = 0
                 inHeight //= 2
                 testList1.append(inHeight)
-
             block = DownBlock(depths[i], depths[i+1], pooling, (pad0, pad1))
             self.down_convs.append(block)
 
         # Build the decoder.
+        self.up_convs = []
         testList0.reverse()
         testList1.reverse()
         numUps = len(depths)-2  # number of upsampling blocks
@@ -275,7 +320,7 @@ class UNetSkip(nn.Module):
                 pad1 = 0
             else:
                 pad1 = 1
-            if i < (numUps-1):
+            if i < (numUps - 1):
                 block = UpBlock(depths[i], depths[i+1], (pad0, pad1))
                 self.up_convs.append(block)
             else:
@@ -313,6 +358,7 @@ class UNetSkip(nn.Module):
         padIt = False
         pad3 = 0
         pad2 = 0
+
         if x.shape[3] % 2 != 0:
             padIt = True
             pad3 = 1
@@ -322,6 +368,9 @@ class UNetSkip(nn.Module):
         if padIt:
             p2d = (0, pad3, 0, pad2)
             x = nn.functional.pad(x, p2d, 'constant', 0)
+
+        # Do flat block first.
+        x = self.flat_convs(x)
 
         # Encoder.
         for i, module in enumerate(self.down_convs):
